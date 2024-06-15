@@ -1,4 +1,6 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 
 from . import util
 
@@ -16,5 +18,22 @@ def page(request, title):
     return render(request, "encyclopedia/page.html", {
         "page_title": title,
         "content": body,
+    })
+
+def search(request):
+    query = request.GET.get("q")
+
+    if query in util.list_entries():
+        return HttpResponseRedirect(reverse("page", args=[query]))
+    
+    results = []
+
+    for entry in util.list_entries():
+        if query.lower() in entry.lower():
+            results.append(entry)
+
+    return render(request, "encyclopedia/search.html", {
+        "query": query,
+        "results": results,
     })
 
