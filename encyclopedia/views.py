@@ -79,7 +79,7 @@ def edit(request):
         form = EditPageForm(request.POST)
         if form.is_valid():
             content = form.cleaned_data["content"]
-            util.save_entry(title, content)
+            util.save_entry(title, bytes(content, 'utf8'))
             return HttpResponseRedirect(reverse("page", args=[title]))
         else:
             return render(request, "encyclopedia/edit.html", {
