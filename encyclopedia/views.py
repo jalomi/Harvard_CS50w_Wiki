@@ -5,6 +5,7 @@ from django.urls import reverse
 
 from . import util
 
+from markdown2 import markdown
 from random import choice
 
 class NewPageForm(forms.Form):
@@ -26,10 +27,12 @@ def page(request, title):
     body = util.get_entry(title)
     if not body:
         body = "ERROR: page not found"
+
+    content = markdown(body)
         
     return render(request, "encyclopedia/page.html", {
         "page_title": title,
-        "content": body,
+        "content": content,
     })
 
 def search(request):
