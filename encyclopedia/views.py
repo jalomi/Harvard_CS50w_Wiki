@@ -5,6 +5,8 @@ from django.urls import reverse
 
 from . import util
 
+from random import choice
+
 class NewPageForm(forms.Form):
     title = forms.CharField(label="",
                             widget=forms.TextInput(attrs={"placeholder":"Title"}))
@@ -86,3 +88,7 @@ def edit(request):
             "title": title,
             "form": EditPageForm(initial={"content": util.get_entry(title)}),
         })
+
+def random(request):
+    title = choice(util.list_entries())
+    return HttpResponseRedirect(reverse("page", args=[title]))
