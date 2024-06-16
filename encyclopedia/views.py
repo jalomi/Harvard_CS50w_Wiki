@@ -10,6 +10,10 @@ class NewPageForm(forms.Form):
                             widget=forms.TextInput(attrs={"placeholder":"Title"}))
     content = forms.CharField(label="",
                               widget=forms.Textarea(attrs={"placeholder":"New Page's Content"}))
+    
+class EditPageForm(forms.Form):
+    content = forms.CharField(label="",
+                              widget=forms.Textarea())
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -62,4 +66,23 @@ def newPage(request):
     else:
         return render(request, "encyclopedia/newpage.html", {
             "form": NewPageForm()
+        })
+    
+def edit(request):
+    title = request.GET.get("title")
+    if request.method == "POST":
+        form = EditPageForm(request.POST)
+        if form.is_valid():
+            content = form.cleaned_data["content"]
+            util.save_entry(title, content)
+            return HttpResponseRedirect(reverse("page", args=[title]))
+        else:
+            return render(request, "encyclopedia/edit.html", {
+                "title": title,
+                "error": "ERROR: Invalid input",
+            })
+    else:
+        return render(request, "encyclopedia/edit.html", {
+            "title": title,
+            "form": EditPageForm(initial={"content": util.get_entry(title)}),
         })

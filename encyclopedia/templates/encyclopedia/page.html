@@ -7,3 +7,11 @@
 {% block body %}
     {{ content }}
 {% endblock %}
+
+{% block edit %}
+<br><br>
+<form action="{% url "edit" %}">
+    <input type="hidden" name="title" value={{ page_title }}>
+    <input type="submit" value="Edit Page">
+</form>
+{% endblock %}
