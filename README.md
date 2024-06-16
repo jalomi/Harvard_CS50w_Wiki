@@ -2,9 +2,13 @@
 
 Submission for Harvard CS50w project titled 'wiki'
 
-Requirements listed below and can be found at https://cs50.harvard.edu/web/2020/projects/1/wiki/
+## Required  Packages
+* Django
+* markdown2
 
-Your website must meet the following requirements:
+## Project Requirements
+
+Requirements listed below and can be found at https://cs50.harvard.edu/web/2020/projects/1/wiki/
 
 Complete the implementation of your Wiki encyclopedia. You must fulfill the following requirements:
 
