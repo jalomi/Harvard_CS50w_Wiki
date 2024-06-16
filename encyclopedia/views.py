@@ -1,9 +1,15 @@
+from django import forms
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
 from . import util
 
+class NewPageForm(forms.Form):
+    title = forms.CharField(label="",
+                            widget=forms.TextInput(attrs={"placeholder":"Title"}))
+    content = forms.CharField(label="",
+                              widget=forms.Textarea(attrs={"placeholder":"New Page's Content"}))
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -37,3 +43,23 @@ def search(request):
         "results": results,
     })
 
+def newPage(request):
+    if request.method == "POST":
+        form = NewPageForm(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data["title"]
+            if title in util.list_entries():
+                return render(request, "encyclopedia/newpage.html", {
+                    "error": "ERROR: Page already exists"
+                })
+            content = form.cleaned_data["content"]
+            util.save_entry(title, content)
+            return HttpResponseRedirect(reverse("page", args=[title]))
+        else:
+            return render(request, "encyclopedia/newpage.html", {
+                "error": "ERROR: Invalid input"
+            })
+    else:
+        return render(request, "encyclopedia/newpage.html", {
+            "form": NewPageForm()
+        })
